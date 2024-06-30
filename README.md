@@ -59,7 +59,7 @@ CREATE USER Mike FOR LOGIN mithun;
 ALTER ROLE db_datareader ADD MEMBER Mike;
 ALTER ROLE db_datawriter ADD MEMBER Mike;
 
-Created Azure Data Factory:
+###Created Azure Data Factory:
 
 Saved the username & password in Azure Key Vault for encryption.
 Provided required permissions to the Admin.
@@ -78,7 +78,7 @@ INNER JOIN sys.schemas s ON t.schema_id = s.schema_id
 WHERE s.name = 'SalesLT';
 
 
-Created a Foreach Activity:
+###Created a Foreach Activity:
 
 Connected Lookup to Foreach.
 In settings, selected items -> dynamic content -> @activity('look for all tables').output.value
@@ -87,7 +87,7 @@ Provided source and sink. In the source, used the following query:
 @{concat('SELECT * FROM ', item().SchemaName, '.', item().TableName)}
 This dynamic query constructs the SELECT statement for each table and copies the data.
 
-Imported data in Parquet format:
+##Imported data in Parquet format:
 
 Reason for using Parquet format: Parquet is efficient for storage and retrieval, supporting advanced compression techniques and efficient encoding schemes.
 In Parquet tables connection, selected linked service file path:
