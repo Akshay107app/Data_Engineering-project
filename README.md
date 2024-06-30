@@ -59,41 +59,4 @@ CREATE USER Mike FOR LOGIN mithun;
 ALTER ROLE db_datareader ADD MEMBER Mike;
 ALTER ROLE db_datawriter ADD MEMBER Mike;
 
-###Created Azure Data Factory:
 
-Saved the username & password in Azure Key Vault for encryption.
-Provided required permissions to the Admin.
-Created a Pipeline:
-
-Lookup Activity: Created in the source dataset.
-Linked Service: Installed Microsoft Self-hosted Integration Runtime to connect with the on-premises database.
-Provided the on-premises SQL server name, database name, username & password from the vault, and checked the connections.
-In the query box, used the following query to get all tables from the database:
-sql
-SELECT 
-  s.name AS SchemaName,
-  t.name AS TableName
-FROM sys.tables t
-INNER JOIN sys.schemas s ON t.schema_id = s.schema_id
-WHERE s.name = 'SalesLT';
-
-
-###Created a Foreach Activity:
-
-Connected Lookup to Foreach.
-In settings, selected items -> dynamic content -> @activity('look for all tables').output.value
-In the activities -> For Each column, selected edit option and dragged Copy Data activity.
-Provided source and sink. In the source, used the following query:
-@{concat('SELECT * FROM ', item().SchemaName, '.', item().TableName)}
-This dynamic query constructs the SELECT statement for each table and copies the data.
-
-##Imported data in Parquet format:
-
-Reason for using Parquet format: Parquet is efficient for storage and retrieval, supporting advanced compression techniques and efficient encoding schemes.
-In Parquet tables connection, selected linked service file path:
-
-The container created in Data Storage has:
-Bronze: for raw data
-Silver: for semi-transformed data
-Gold: for cleaned data
-Selecting bronze / @{concat(dataset().SchemaName, '/', dataset().TableName)} / @{concat(dataset().TableName, '.parquet')} to automate file extensions.
